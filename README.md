@@ -23,6 +23,11 @@ private/authenticated data, no exploit or bypass tooling.
 | Batch Mode | Runs Username / Email / Domain-IP / Phone checks across up to 25 subjects at once | Same as above |
 | Report Export | Exports the full case (findings + notes) as Markdown or PDF | Local rendering (weasyprint) |
 
+## Requirements
+
+- Python 3.9 or newer (works fine on 3.9 through 3.13)
+- No Node.js, no build step — the frontend is static HTML/CSS/JS
+
 ## Quick start — clone, venv, run
 
 This is the fastest path: clone (or copy) the folder, then use the
