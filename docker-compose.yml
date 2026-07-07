@@ -1,0 +1,23 @@
+services:
+  raws:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: raws:latest
+    container_name: raws
+    ports:
+      - "8420:8420"
+    volumes:
+      - raws_data:/data
+    environment:
+      - OSINT_DB_PATH=/data/cases.db
+      # Optional API keys — leave blank to skip those enrichments
+      - HIBP_API_KEY=${HIBP_API_KEY:-}
+      - SHODAN_API_KEY=${SHODAN_API_KEY:-}
+    restart: unless-stopped
+    # No external network calls are required for the app to run except the
+    # optional lookups themselves (crt.sh, RDAP, ip-api, HIBP, Shodan).
+    # Remove/replace those modules if you need this fully air-gapped.
+
+volumes:
+  raws_data:
