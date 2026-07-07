@@ -1,11 +1,9 @@
-# RAWS
-RAWS is a osint tool
-# OSINT Case Desk
+# RAWS — Read-only OSINT Workstation
 
-A self-hosted, local-first OSINT investigation dashboard styled as a case file
-workspace. Create a case, run checks from the tool nav on the left, and every
-result is automatically logged to the case file on the right. Export the
-whole case as a Markdown or PDF report when you're done.
+A self-hosted, local-first OSINT investigation dashboard styled as a case
+file workspace. Create a case, run checks from the tool nav on the left,
+and every result is automatically logged to the case file on the right.
+Export the whole case as a Markdown or PDF report when you're done.
 
 **Scope, by design:** read-only lookups against public data sources only.
 No people-search brokers, no identity-resolution services, no scraping of
@@ -25,31 +23,71 @@ private/authenticated data, no exploit or bypass tooling.
 | Batch Mode | Runs Username / Email / Domain-IP / Phone checks across up to 25 subjects at once | Same as above |
 | Report Export | Exports the full case (findings + notes) as Markdown or PDF | Local rendering (weasyprint) |
 
-## Quick start (Docker)
+## Quick start — clone, venv, run
+
+This is the fastest path: clone (or copy) the folder, then use the
+included launcher, which creates the virtual environment, installs
+requirements, and starts the local server for you.
+
+**macOS / Linux:**
 
 ```bash
-git clone <this folder as a repo, or just copy it as-is>
-cd osint-dashboard
+git clone <this repo, or just copy the RAWS folder> RAWS
+cd RAWS
+chmod +x run.sh
+./run.sh
+```
+
+**Windows:**
+
+```bat
+git clone <this repo, or just copy the RAWS folder> RAWS
+cd RAWS
+run.bat
+```
+
+Then open **http://127.0.0.1:8420** in your browser. That's the local
+host address the app binds to — nothing leaves your machine except the
+individual lookups each tool performs against the public services listed
+above.
+
+Stop the server anytime with `Ctrl+C`. Run the same script again later —
+it reuses the existing virtual environment and only re-installs anything
+that changed.
+
+### Doing it by hand instead
+
+If you'd rather run the steps yourself instead of using `run.sh`/`run.bat`:
+
+```bash
+cd RAWS/backend
+python3 -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+OSINT_DB_PATH=./data/cases.db uvicorn app.main:app --host 127.0.0.1 --port 8420
+```
+
+The frontend is plain static HTML/CSS/JS served by FastAPI directly — no
+build step, no Node, no bundler required.
+
+### Optional: Docker instead of venv
+
+```bash
+cd RAWS
 cp .env.example .env      # optional: add HIBP_API_KEY / SHODAN_API_KEY
 docker compose up --build
 ```
 
-Open **http://localhost:8420**.
+Open **http://localhost:8420**. Data persists in a Docker volume
+(`raws_data`) mounted at `/data`. To fully reset: `docker compose down -v`.
 
-Data persists in a Docker volume (`osint_data`) mounted at `/data`, so cases
-survive container restarts. To fully reset, run `docker compose down -v`.
+### A note on PDF export without Docker
 
-## Running without Docker (Python venv)
-
-```bash
-chmod +x run_venv.sh
-./run_venv.sh
-```
-
-This creates a venv in `backend/venv`, installs dependencies, and starts the
-server at **http://localhost:8420**. For manual steps, platform-specific
-notes (including PDF export system libraries), troubleshooting, and how to
-use a `.env` file in this mode, see **[RUNNING_WITHOUT_DOCKER.md](RUNNING_WITHOUT_DOCKER.md)**.
+If you're running the venv path (not Docker) and want PDF export, WeasyPrint
+needs a few system libraries: `libpango-1.0-0`, `libpangocairo-1.0-0`,
+`libcairo2`, `libgdk-pixbuf2.0-0` (Debian/Ubuntu package names — macOS via
+Homebrew: `brew install pango`). Markdown export always works with no
+extra dependencies, so you're never blocked on reporting.
 
 ## Configuration
 
@@ -60,7 +98,9 @@ All configuration is via environment variables (see `.env.example`):
   blank and the Email Intel tool simply reports the lookup as skipped.
 - `SHODAN_API_KEY` — optional. Enables host enrichment for IP recon.
 - `OSINT_DB_PATH` — where the SQLite case database lives (defaults to
-  `/data/cases.db` inside the container).
+  `./data/cases.db` when run via `run.sh`/`run.bat`, `/data/cases.db`
+  inside the Docker container).
+- `PORT` — optional, only used by `run.sh`/`run.bat`, defaults to `8420`.
 
 Nothing else requires configuration. Every lookup that doesn't need a key
 (RDAP, DNS, crt.sh, ip-api.com geolocation, the platform username checks)
@@ -86,7 +126,7 @@ works out of the box, using only public, unauthenticated endpoints.
   cannot tell you who owns a number, only what the number *is* (type,
   region, plausible carrier family, timezone).
 - **File Metadata** never uploads your file anywhere — everything happens
-  in the container's temp storage and is discarded after processing.
+  locally on disk and the temp copy is discarded after processing.
 - All batch jobs are capped at 25 subjects per run to keep things
   responsive and to avoid hammering the public services this app depends
   on. Please use reasonable request pacing and respect the terms of
@@ -95,7 +135,9 @@ works out of the box, using only public, unauthenticated endpoints.
 ## Project layout
 
 ```
-osint-dashboard/
+RAWS/
+├── run.sh                      # one-command launcher (macOS/Linux)
+├── run.bat                     # one-command launcher (Windows)
 ├── docker-compose.yml
 ├── .env.example
 ├── backend/
