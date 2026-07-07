@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAWS &mdash; Read-only OSINT Workstation</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">&#9679;</span>
+      <span class="brand-text">RAWS</span>
+      <span class="brand-sub">read-only osint workstation</span>
+    </div>
+    <div class="case-switcher">
+      <select id="caseSelect"><option value="">— No case selected —</option></select>
+      <button id="newCaseBtn" class="btn btn-accent">+ New Case</button>
+      <button id="closeCaseBtn" class="btn btn-ghost" title="Toggle open/closed">Toggle Status</button>
+      <div class="case-status" id="caseStatusBadge"></div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- Left nav: tools -->
+    <nav class="toolnav">
+      <div class="nav-section-label">Investigate</div>
+      <button class="nav-item active" data-tool="username">Username Check</button>
+      <button class="nav-item" data-tool="email">Email Intel</button>
+      <button class="nav-item" data-tool="domain-ip">Domain / IP Recon</button>
+      <button class="nav-item" data-tool="phone">Phone Intel</button>
+      <button class="nav-item" data-tool="file">File Metadata</button>
+      <button class="nav-item" data-tool="dorks">Dork Builder</button>
+      <button class="nav-item" data-tool="reverse-image">Reverse Image</button>
+      <div class="nav-section-label">Bulk</div>
+      <button class="nav-item" data-tool="batch">Batch Mode</button>
+      <div class="nav-section-label">Case</div>
+      <button class="nav-item" data-tool="notes">Notes</button>
+      <button class="nav-item" data-tool="report">Report Export</button>
+      <div class="nav-footer">Read-only · public sources only · runs locally</div>
+    </nav>
+
+    <!-- Center: active tool panel -->
+    <main class="workpanel" id="workpanel">
+      <!-- injected by app.js -->
+    </main>
+
+    <!-- Right: case file log -->
+    <aside class="casefile" id="casefile">
+      <div class="casefile-header">
+        <h2 id="caseFileTitle">No active case</h2>
+        <p id="caseFileMeta" class="casefile-meta"></p>
+      </div>
+      <div class="casefile-log" id="caseFileLog">
+        <div class="empty-state">Create or select a case to begin logging findings.</div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<!-- New case modal -->
+<div id="newCaseModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h3>Open a new case</h3>
+    <label>Case name</label>
+    <input id="newCaseName" type="text" placeholder="e.g. Operation Riverbank">
+    <label>Investigator (optional)</label>
+    <input id="newCaseInvestigator" type="text" placeholder="your name / handle">
+    <label>Description (optional)</label>
+    <textarea id="newCaseDescription" rows="3" placeholder="brief context for this case"></textarea>
+    <div class="modal-actions">
+      <button id="cancelNewCase" class="btn btn-ghost">Cancel</button>
+      <button id="confirmNewCase" class="btn btn-accent">Create Case</button>
+    </div>
+  </div>
+</div>
+
+<!-- Finding detail modal -->
+<div id="findingModal" class="modal-backdrop hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header-row">
+      <h3 id="findingModalTitle">Finding</h3>
+      <button id="closeFindingModal" class="btn btn-ghost">✕</button>
+    </div>
+    <pre id="findingModalBody" class="raw-json"></pre>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

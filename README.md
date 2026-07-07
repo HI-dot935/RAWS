@@ -37,7 +37,7 @@ requirements, and starts the local server for you.
 **macOS / Linux:**
 
 ```bash
-git clone https://github.com/HI-dot935/RAWS
+git clone <this repo, or just copy the RAWS folder> RAWS
 cd RAWS
 chmod +x run.sh
 ./run.sh
@@ -46,7 +46,7 @@ chmod +x run.sh
 **Windows:**
 
 ```bat
-git clone https://github.com/HI-dot935/RAWS 
+git clone <this repo, or just copy the RAWS folder> RAWS
 cd RAWS
 run.bat
 ```
