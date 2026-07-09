@@ -1,3 +1,4 @@
+<img width="1366" height="768" alt="Screenshot 2026-07-09 at 10 14 26 AM" src="https://github.com/user-attachments/assets/7d0a5193-8f5c-4254-bf99-156e6ee11c54" />
 # RAWS — Read-only OSINT Workstation
 
 A self-hosted, local-first OSINT investigation dashboard styled as a case
@@ -168,6 +169,70 @@ RAWS/
     ├── styles.css
     └── app.js
 ```
+
+##Here's what RAWS can do, tool by tool:
+Case Management
+
+Create/open/close investigation cases
+Every check you run auto-logs into the active case (right-side panel)
+Add manual notes to a case
+Mark case status (open/closed)
+
+<img width="1366" height="768" alt="Screenshot 2026-07-09 at 10 14 39 AM" src="https://github.com/user-attachments/assets/bd21f6ee-ecce-4716-875d-ddf33541dd03" />
+
+Username Check
+
+Checks a username against ~40 major platforms (social media, forums, dev sites, etc.)
+Returns found / not_found / unknown for each
+Gives you a direct clickable profile link for each platform
+<img width="1366" height="768" alt="Screenshot 2026-07-09 at 10 16 18 AM" src="https://github.com/user-attachments/assets/9df519c8-3651-4095-9277-a79e97b32d16" />
+<img width="1366" height="768" alt="Screenshot 2026-07-09 at 10 16 27 AM" src="https://github.com/user-attachments/assets/5ced04d3-d552-4477-a003-670302b2a575" />
+
+Email Intel
+
+Validates email syntax
+Looks up MX records (is the domain actually set up to receive mail)
+Checks against a disposable/throwaway email domain list
+Optional: Have I Been Pwned breach lookup (only if you add your own HIBP API key)
+
+Domain / IP Recon
+
+RDAP lookup (who registered the domain/IP, when)
+DNS records (A, AAAA, MX, NS, TXT, CNAME)
+Certificate Transparency search (finds subdomains via crt.sh)
+IP geolocation (city/ISP level, not precise address)
+Optional: Shodan enrichment (open ports, banners) if you add your own Shodan API key
+
+Phone Intel
+
+Fully offline, no internet needed
+Tells you: valid or not, number type (mobile/landline/voip), country/region, timezone, likely carrier family
+Cannot tell you who owns the number
+
+File Metadata
+
+Computes MD5/SHA1/SHA256 hashes of any uploaded file
+For images: extracts EXIF data (camera info, GPS coordinates if present, timestamps)
+For PDFs: extracts document metadata (author, creation date, software used, etc.)
+Nothing is uploaded anywhere — all local
+
+Dork Builder
+
+Generates ready-to-click Google/Bing/DuckDuckGo search links for a name, username, email, domain, or phone number
+Doesn't run the search itself, just builds the links
+
+Reverse Image Search
+
+Generates clickable reverse-image-search links (Google Lens, TinEye, Yandex, Bing) from an image URL
+
+Batch Mode
+
+Run Username / Email / Domain-IP / Phone checks on up to 25 subjects at once in one go
+
+Report Export
+
+Export the whole case (all findings + your notes) as a Markdown file
+Export the whole case as a PDF
 
 ## Extending it
 
